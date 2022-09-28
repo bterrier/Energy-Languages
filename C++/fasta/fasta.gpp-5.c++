@@ -14,6 +14,7 @@
 
 #include <algorithm>
 #include <array>
+#include <functional>
 #include <vector>
 #include <thread>
 #include <mutex>
