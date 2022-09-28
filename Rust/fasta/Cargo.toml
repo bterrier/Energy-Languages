@@ -1,0 +1,11 @@
+[package]
+name="fasta"
+version="0.0.0"
+[[bin]]
+name="fasta"
+path="fasta.rs"
+[dependencies]
+num_cpus="*"
+[profile.bench]
+opt-level = 3
+lto = true

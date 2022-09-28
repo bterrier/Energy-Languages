@@ -1,0 +1,11 @@
+[package]
+name="mandelbrot"
+version="0.0.0"
+[[bin]]
+name="mandelbrot"
+path="mandelbrot.rs"
+[dependencies]
+rayon="~0.7.1"
+[profile.bench]
+opt-level = 3
+lto = true

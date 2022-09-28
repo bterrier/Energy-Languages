@@ -1,5 +1,6 @@
 compile:
-	/usr/local/src/rust-1.16.0/bin/rustc -C opt-level=3 -C target-cpu=core2 -C lto -L /usr/local/src/rust-libs mandelbrot.rs -o mandelbrot.rust-4.rust_run
+	RUSTFLAGS='-C target-cpu=native' cargo build --profile bench
+	cp target/release/mandelbrot ./mandelbrot.rust-4.rust_run
 
 measure:
 	sudo modprobe msr

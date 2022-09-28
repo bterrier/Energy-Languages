@@ -11,7 +11,9 @@ def file_exists(file_path):
         return os.path.isfile(file_path)
 
 def main():
+  exclude = set(['target'])
   for root, dirs, files in os.walk(path):
+    dirs[:] = [d for d in dirs if d not in exclude]
     print 'Checking' + root
     makefile = os.path.join(root, "Makefile")
     if file_exists(makefile):
