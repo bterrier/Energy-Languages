@@ -1,5 +1,5 @@
 compile:
-	/usr/bin/go build -o binarytrees.go-2.go_run
+	/usr/bin/go build -o binarytrees.go-2.go_run binarytrees.go-2.go
 
 measure:
 	sudo modprobe msr

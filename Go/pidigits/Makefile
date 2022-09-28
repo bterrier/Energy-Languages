@@ -1,5 +1,5 @@
 compile:
-	/usr/bin/go build -o pidigits.go-3.go_run
+	/usr/bin/go build -o pidigits.go-3.go_run pidigits.go-3.go
 
 measure:
 	sudo modprobe msr

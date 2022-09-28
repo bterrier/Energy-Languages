@@ -1,5 +1,5 @@
 compile:
-	/usr/bin/go build -o regexredux.go-2.go_run
+	/usr/bin/go build -o regexredux.go-2.go_run regexredux.go-2.go
 
 xmeasure:
 	sudo modprobe msr

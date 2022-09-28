@@ -1,5 +1,5 @@
 compile:
-	/usr/bin/go build -o nbody.go_run
+	/usr/bin/go build -o nbody.go_run nbody.go
 
 measure:
 	sudo modprobe msr

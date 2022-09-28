@@ -1,5 +1,5 @@
 compile:
-	/usr/bin/go build -o fasta.go-3.go_run
+	/usr/bin/go build -o fasta.go-3.go_run fasta.go-3.go
 
 measure:
 	sudo modprobe msr
