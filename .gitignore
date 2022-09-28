@@ -5,4 +5,14 @@ tmp.*
 *.class
 lshw
 sysinfo.*
+*.adb
+*.ads
+*.ali
+*.o
+*.gnat_run
+*.gcc_run
+*.gpp_run
+*.go_run
+*.rust_run
+target/
 
