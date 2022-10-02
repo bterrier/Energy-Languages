@@ -15,4 +15,5 @@ sysinfo.*
 *.go_run
 *.rust_run
 target/
+/*.txt
 
