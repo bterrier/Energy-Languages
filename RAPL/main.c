@@ -1,16 +1,20 @@
-
-
-#include <stdio.h>
-#include <time.h>
 #include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <time.h>
+
+#include <sys/time.h>
+
 #include "rapl.h"
 
 #define RUNTIME 1
 
 
 int main (int argc, char **argv) 
-{ char command[500]="",language[500]="", test[500]="", path[500]="";
+{ 
+  char command[500]="",language[500]="", test[500]="";
+  const char path[500] = "../../results.csv";
   int  ntimes = 10;
   int  core = 0;
   int  i=0;
@@ -27,12 +31,9 @@ int main (int argc, char **argv)
 //  strcpy(command, "./" );
   strcat(command,argv[1]);
   //Language name
-  strcpy(path,"../");
 
 
   strcpy(language,argv[2]);
-  strcat(language,".csv");
-  strcat(path,language);
   //Test name
   strcpy(test,argv[3]);
 
@@ -43,12 +44,13 @@ int main (int argc, char **argv)
 
   rapl_init(core);
 
-  //fprintf(fp,"Package , CPU , GPU , DRAM? , Time (sec) \n");
+  //fprintf(fp,"Language;benchmark-name;PKG (Joules);CPU (J);GPU (J);DRAM (J);Time (ms)\n");
   
   for (i = 0 ; i < ntimes ; i++)
     {  
  
-    	fprintf(fp,"%s ; ",test);
+    	fprintf(fp,"%s;",language);
+    	fprintf(fp,"%s;",test);
  	
 	      
 		#ifdef RUNTIME
@@ -58,9 +60,13 @@ int main (int argc, char **argv)
 	
 	rapl_before(fp,core);
 	
-        system(command);
+  int status = system(command);
 
 	rapl_after(fp,core);
+
+  if (status != 0) {
+    fprintf(stderr, "Benchmark error, non 0 exit status for %s %s\n", language, test);
+  }
 
 		#ifdef RUNTIME
 			//end = clock();
@@ -72,7 +78,7 @@ int main (int argc, char **argv)
 			
 
 		#ifdef RUNTIME	
-			fprintf(fp," %G \n",time_spent);
+			fprintf(fp,"%G\n",time_spent);
 		#endif	
     }
     

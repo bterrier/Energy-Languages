@@ -310,12 +310,12 @@ void rapl_after(FILE * fp , int core)
   result=read_msr(fd,MSR_PKG_ENERGY_STATUS);
   package_after=(double)result*energy_units;
   //  fprintf(fp,"Package energy: %.6fJ consumed\n",package_after-package_before);
-  fprintf(fp,"%.18f, ",package_after-package_before);  // PACKAGE
+  fprintf(fp,"%.18f;",package_after-package_before);  // PACKAGE
 
   result=read_msr(fd,MSR_PP0_ENERGY_STATUS);
   pp0_after=(double)result*energy_units;
 
-  fprintf(fp,"%.18f, ",pp0_after-pp0_before);    // CORE
+  fprintf(fp,"%.18f;",pp0_after-pp0_before);    // CORE
 
 
   /* not available on SandyBridge-EP */
@@ -323,18 +323,18 @@ void rapl_after(FILE * fp , int core)
   (cpu_model==CPU_HASWELL)) {
      result=read_msr(fd,MSR_PP1_ENERGY_STATUS);
      pp1_after=(double)result*energy_units;
-     fprintf(fp,"%.18f, ",pp1_after-pp1_before);     // GPU
+     fprintf(fp,"%.18f;",pp1_after-pp1_before);     // GPU
   }
   else
-    fprintf(fp," , ");
+    fprintf(fp,";");
 
   if ((cpu_model==CPU_SANDYBRIDGE_EP) || (cpu_model==CPU_IVYBRIDGE_EP) ||
   (cpu_model==CPU_HASWELL)) {
      result=read_msr(fd,MSR_DRAM_ENERGY_STATUS);
      dram_after=(double)result*energy_units;
-     fprintf(fp,"%.18f, ",dram_after-dram_before);     // DRAM
+     fprintf(fp,"%.18f;",dram_after-dram_before);     // DRAM
   }
   else
-    fprintf(fp," , ");  
+    fprintf(fp,";");  
 
 }
