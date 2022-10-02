@@ -17,3 +17,4 @@ sysinfo.*
 target/
 /*.txt
 node_modules
+/RAPL/main
