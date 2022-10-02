@@ -5,6 +5,8 @@ folders=(
         C
         C++
         Go
+        Java
+        Python
         Rust
     )
 
