@@ -1,7 +1,7 @@
 compile:
 	/usr/bin/go build -o regexredux.go-2.go_run regexredux.go-2.go
 
-xmeasure:
+measure:
 	sudo modprobe msr
 	sudo ../../RAPL/main "./regexredux.go-2.go_run 0 < ../../regexredux-input5000000.txt" Go regex-redux
 
