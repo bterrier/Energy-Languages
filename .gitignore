@@ -16,4 +16,4 @@ sysinfo.*
 *.rust_run
 target/
 /*.txt
-
+node_modules
