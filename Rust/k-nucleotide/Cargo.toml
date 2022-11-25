@@ -6,8 +6,10 @@ name="knucleotide"
 path="knucleotide.rs"
 [dependencies]
 futures="0.1.30"
-futures-cpupool="*"
-ordermap="*"
+itertools="*"
+tokio-threadpool="*"
+num="*"
+hashbrown="*"
 [profile.bench]
 opt-level = 3
 lto = true

@@ -1,143 +1,172 @@
 // The Computer Language Benchmarks Game
-// http://benchmarksgame.alioth.debian.org/
+// https://salsa.debian.org/benchmarksgame-team/benchmarksgame/
 //
-// contributed by Matt Watson
-// contributed by TeXitoi
-// contributed by Cristi Cobzarenco
+// Contributed by Kevin Miller
+// Converted from C to Rust by Tung Duong
 
 extern crate rayon;
 
+use std::ops::{Add, Sub, Mul};
 use std::io::Write;
-use std::ops::{Add, Mul, Sub};
 use rayon::prelude::*;
 
-const MAX_ITER: usize = 50;
-const VLEN: usize = 8;
-const ZEROS: Vecf64 = Vecf64([0.; VLEN]);
 
-macro_rules! for_vec {
-    ( in_each [ $( $val:tt ),* ] do $from:ident $op:tt $other:ident ) => {
-        $( $from.0[$val] $op $other.0[$val]; )*
-    };
-    ( $from:ident $op:tt $other:ident ) => {
-        for_vec!(in_each [0, 1, 2, 3, 4, 5, 6, 7] do $from $op $other);
-    };
-}
-
+#[allow(non_camel_case_types)]
 #[derive(Clone, Copy)]
-pub struct Vecf64([f64; VLEN]);
-impl Mul for Vecf64 {
-    type Output = Vecf64;
-    fn mul(mut self, other: Vecf64) -> Vecf64 {
-        for_vec!(self *= other);
-        self
-    }
-}
-impl Add for Vecf64 {
-    type Output = Vecf64;
-    fn add(mut self, other: Vecf64) -> Vecf64 {
-        for_vec!(self += other);
-        self
-    }
-}
-impl Sub for Vecf64 {
-    type Output = Vecf64;
-    fn sub(mut self, other: Vecf64) -> Vecf64 {
-        for_vec!(self -= other);
-        self
+struct f64x2(f64,f64);
+
+const ZEROS: [f64x2;4] = [f64x2(0.0,0.0); 4];
+
+impl Add for f64x2 {
+    type Output = Self;
+    fn add(self, rhs: Self) -> Self {
+        f64x2(self.0 + rhs.0, self.1 + rhs.1)
     }
 }
 
-pub struct Mandelbrot8 {
-    zr: Vecf64,
-    zi: Vecf64,
-    tr: Vecf64,
-    ti: Vecf64,
-
-    cr: Vecf64,
-    ci: Vecf64,
-    ci2: Vecf64,
+impl Sub for f64x2 {
+    type Output = Self;
+    fn sub(self, rhs: Self) -> Self {
+        f64x2(self.0 - rhs.0, self.1 - rhs.1)
+    }
 }
 
-impl Mandelbrot8 {
-    pub fn new(ci: Vecf64) -> Self {
-        Mandelbrot8 {
-            zr: ZEROS,
-            zi: ZEROS,
-            tr: ZEROS,
-            ti: ZEROS,
+impl Mul for f64x2 {
+    type Output = Self;
+    fn mul(self, rhs: Self) -> Self {
+        f64x2(self.0 * rhs.0, self.1 * rhs.1)
+    }
+}
 
-            cr: ZEROS,
-            ci: ci,
-            ci2: ci * ci,
+#[inline(always)]
+fn vec_nle(v : &[f64x2;4], f : f64) -> bool {
+    return if v[0].0 <= f ||
+        v[0].1 <= f ||
+        v[1].0 <= f ||
+        v[1].1 <= f ||
+        v[2].0 <= f ||
+        v[2].1 <= f ||
+        v[3].0 <= f ||
+        v[3].1 <= f {false} else {true};
+}
+
+#[inline(always)]
+fn clr_pixels_nle(v : &[f64x2;4], f: f64, pix8 : &mut u8){
+    if !(v[0].0 <= f) {*pix8 &= 0x7f;}
+    if !(v[0].1 <= f) {*pix8 &= 0xbf;}
+    if !(v[1].0 <= f) {*pix8 &= 0xdf;}
+    if !(v[1].1 <= f) {*pix8 &= 0xef;}
+    if !(v[2].0 <= f) {*pix8 &= 0xf7;}
+    if !(v[2].1 <= f) {*pix8 &= 0xfb;}
+    if !(v[3].0 <= f) {*pix8 &= 0xfd;}
+    if !(v[3].1 <= f) {*pix8 &= 0xfe;}
+}
+
+#[inline(always)]
+fn calc_sum(r: &mut [f64x2;4], i : &mut[f64x2;4], sum : &mut[f64x2;4], init_r: &[f64x2;4], init_i : f64x2){
+	for j in 0..4{
+		let r2 = r[j] * r[j];
+		let i2 = i[j] * i[j];
+		let ri = r[j] * i[j];
+		sum[j] = r2 + i2;
+		r[j] = r2 - i2 + init_r[j];
+		i[j] = ri + ri + init_i;
+	}
+}
+
+#[inline(always)]
+fn mand8(init_r: &[f64x2;4], init_i : f64x2) -> u8 {
+	let mut r = ZEROS;
+	let mut i = ZEROS;
+	let mut sum = ZEROS;
+
+	for j in 0..4{
+		r[j] = init_r[j];
+		i[j] = init_i;
+	}
+
+    let mut pix8 : u8 = 0xff;
+
+    for _ in 0..6 {
+        for _ in 0..8{
+            calc_sum(&mut r, &mut i, &mut sum, &init_r, init_i);
+        }
+
+        if vec_nle(&sum, 4.0) {
+            pix8 = 0x00;
+            break;
         }
     }
+    if pix8 != 0 {
+        calc_sum(&mut r, &mut i, &mut sum, &init_r, init_i);
+        calc_sum(&mut r, &mut i, &mut sum, &init_r, init_i);
+        clr_pixels_nle(&sum, 4.0, &mut pix8);
+    }
 
-    pub fn run(&mut self, cr: Vecf64, cr2: Vecf64) -> u8 {
-        self.zr = cr;
-        self.zi = self.ci;
-        self.tr = cr2;
-        self.ti = self.ci2;
-        self.cr = cr;
+    pix8
+}
 
-        self.advance(4);
-        for _ in 0..MAX_ITER / 5 - 1 {
-            if self.all_diverged() {
-                return 0;
+fn mand64(init_r: &[f64x2;32], init_i : f64x2, out : &mut [u8]) {
+    let mut tmp_init_r = ZEROS;   	
+    
+    for i in 0..8 {
+    	tmp_init_r.copy_from_slice(&init_r[4*i..4*i+4]);
+        out[i] = mand8(&tmp_init_r, init_i);
+    }
+}
+
+fn main(){
+	let mut width = std::env::args_os().nth(1)
+        .and_then(|s| s.into_string().ok())
+        .and_then(|n| n.parse().ok())
+        .unwrap_or(16000);
+    width = (width+7) & !7;
+    
+    println!("P4\n{} {}", width, width);
+    let mut r0 = vec![f64x2(0.0,0.0); width/2];
+    let mut i0 = vec![0.0; width];
+
+    for i in 0..width/2 {
+        let x1 = (2*i) as f64;
+        let x2 = (2*i+1) as f64;
+        let k = 2.0 / (width as f64);
+        r0[i] = f64x2(k*x1, k*x2) - f64x2(1.5,1.5);
+        i0[2*i]    = k*x1 - 1.0;
+        i0[2*i+1]  = k*x2 - 1.0;
+    }
+
+    let rows : Vec<_>  = if width%64==0 {
+        // process 64 pixels (8 bytes) at a time
+        (0..width).into_par_iter().map(|y|{
+            let mut tmp_r0 = [f64x2(0.0,0.0);32];
+            let mut row = vec![0 as u8; (width/8) as usize];
+            let init_i = f64x2(i0[y], i0[y]);
+            
+            for x in 0..width/64{
+                tmp_r0.copy_from_slice(&r0[32*x..32*x+32]);
+                mand64(&tmp_r0, init_i, &mut row[8*x..8*x + 8]);                
             }
-            self.advance(5);
-        }
-        self.to_byte()
-    }
+            row
+        }).collect()
+    }else {
+		// process 8 pixels (1 byte) at a time
+    	(0..width).into_par_iter().map(|y|{
+    		let mut tmp_r0 = ZEROS;
+    		let mut row = vec![0 as u8; (width/8) as usize];
+    		let init_i = f64x2(i0[y], i0[y]);
+    		
+    		for x in 0..width/8{
+    			tmp_r0.copy_from_slice(&r0[4*x..4*x+4]);
+    			row[x] = mand8(&tmp_r0, init_i);
+    		}
+    		row
+    	}).collect()
+    };
 
-    fn advance(&mut self, iterations: usize) {
-        for _ in 0..iterations {
-            self.zi = (self.zr + self.zr) * self.zi + self.ci;
-            self.zr = self.tr - self.ti + self.cr;
-            self.tr = self.zr * self.zr;
-            self.ti = self.zi * self.zi;
-        }
-    }
-
-    fn all_diverged(&self) -> bool {
-        (self.tr + self.ti).0.iter().all(|&t| t > 4.)
-    }
-
-    fn to_byte(&self) -> u8 {
-        (self.tr + self.ti)
-            .0
-            .iter()
-            .enumerate()
-            .map(|(i, &t)| if t <= 4. { 0x80 >> i } else { 0 })
-            .fold(0, |accu, b| accu | b)
-    }
-}
-
-
-fn main() {
-    let size = std::env::args().nth(1).and_then(|n| n.parse().ok()).unwrap_or(200);
-    let size = size / VLEN * VLEN;
-    let inv = 2. / size as f64;
-    let mut xloc = vec![(ZEROS, ZEROS); size / VLEN];
-    for i in 0..size {
-        let x = i as f64 * inv - 1.5;
-        (xloc[i / VLEN].0).0[i % VLEN] = x;
-        (xloc[i / VLEN].1).0[i % VLEN] = x * x;
-    }
-
-    let mut output = vec![0u8; size * size / VLEN];
-    output.par_chunks_mut(size / VLEN)
-        .weight_max()
-        .enumerate()
-        .for_each(|(y, chunk)| {
-            let mut m = Mandelbrot8::new(Vecf64([y as f64 * inv - 1.; VLEN]));
-            for (&(x, x2), c) in xloc.iter().zip(chunk) {
-                *c = m.run(x, x2);
-            }
-        });
-
-    println!("P4\n{} {}", size, size);
     let stdout_unlocked = std::io::stdout();
     let mut stdout = stdout_unlocked.lock();
-    stdout.write_all(&output).unwrap();
+    for row in rows{
+    	stdout.write_all(&row).unwrap();
+    }
+    stdout.flush().unwrap();
 }

@@ -1,14 +1,16 @@
+PROGRAM_NAME=mandelbrot.gpp-4
 compile:
-	/usr/bin/g++ -c -pipe -O3 -fomit-frame-pointer -march=native -mfpmath=sse -msse2 -mfpmath=sse -msse2 -fopenmp -mno-fma --std=c++14 mandelbrot.gpp-6.c++ -o mandelbrot.gpp-6.c++.o &&  /usr/bin/g++ mandelbrot.gpp-6.c++.o -o mandelbrot.gpp-6.gpp_run -fopenmp 
+	/usr/bin/g++ -c -pipe -O3 -fomit-frame-pointer -march=native -std=c++17 -mno-fma  $(PROGRAM_NAME).c++ -o $(PROGRAM_NAME).c++.o
+	/usr/bin/g++ $(PROGRAM_NAME).c++.o -o $(PROGRAM_NAME).gpp_run -pthread 
 measure:
 	sudo modprobe msr
-	sudo ../../RAPL/main "./mandelbrot.gpp-6.gpp_run 16000" C++ mandelbrot
+	sudo ../../RAPL/main "./$(PROGRAM_NAME).gpp_run 16000" C++ mandelbrot
 
 run:
-	./mandelbrot.gpp-6.gpp_run 16000
+	./$(PROGRAM_NAME).gpp_run 16000
 
 mem:
-	/usr/bin/time -v ./mandelbrot.gpp-6.gpp_run 16000
+	/usr/bin/time -v ./$(PROGRAM_NAME).gpp_run 16000
 
 valgrind:
-	valgrind --tool=massif --stacks=yes ./mandelbrot.gpp-6.gpp_run 16000
+	valgrind --tool=massif --stacks=yes ./$(PROGRAM_NAME).gpp_run 16000

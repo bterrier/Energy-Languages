@@ -1,12 +1,13 @@
+PROGRAM_NAME=spectralnorm.gcc-6
 compile:
-	/usr/bin/gcc -pipe -Wall -O3 -fomit-frame-pointer -march=native -fopenmp -mfpmath=sse -msse2 spectralnorm.gcc-4.c -o spectralnorm.gcc-4.gcc_run -lm
+	/usr/bin/gcc -pipe -Wall -O3 -fomit-frame-pointer -march=native -fopenmp -mfpmath=sse -msse2 $(PROGRAM_NAME).c -o $(PROGRAM_NAME).gcc_run -lm
 measure:
 	sudo modprobe msr
-	sudo ../../RAPL/main "./spectralnorm.gcc-4.gcc_run 5500" C spectral-norm
+	sudo ../../RAPL/main "./$(PROGRAM_NAME).gcc_run 5500" C spectral-norm
 
 run:
-	./spectralnorm.gcc-4.gcc_run 5500
+	./$(PROGRAM_NAME).gcc_run 5500
 
 mem:
-	/usr/bin/time -v ./spectralnorm.gcc-4.gcc_run 5500
+	/usr/bin/time -v ./$(PROGRAM_NAME).gcc_run 5500
 

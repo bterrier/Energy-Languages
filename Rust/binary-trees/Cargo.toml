@@ -5,8 +5,9 @@ version="0.0.0"
 name="binarytrees"
 path="binarytrees.rs"
 [dependencies]
-rayon="~1.0.3"
+rayon="*"
 typed-arena="*"
+bumpalo="*"
 [profile.bench]
 opt-level = 3
 lto = true

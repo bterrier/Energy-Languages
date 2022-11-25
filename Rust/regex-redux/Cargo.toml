@@ -6,6 +6,7 @@ name="regexredux"
 path="regexredux.rs"
 [dependencies]
 regex="1.6.0"
+rayon="*"
 [profile.bench]
 opt-level = 3
 lto = true

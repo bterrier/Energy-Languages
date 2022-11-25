@@ -1,16 +1,19 @@
+PROGRAM_NAME=nbody.gpp-0
 compile:
-	/usr/bin/g++ -c -pipe -O3 -fomit-frame-pointer -march=native -mfpmath=sse -msse3 --std=c++11 nbody.gpp-8.c++ -o nbody.gpp-8.c++.o &&  /usr/bin/g++ nbody.gpp-8.c++.o -o nbody.gpp-8.gpp_run -fopenmp
+	/usr/bin/g++ -c -pipe -O3 -fomit-frame-pointer -march=native --std=c++17 $(PROGRAM_NAME).c++ -o $(PROGRAM_NAME).c++.o
+	/usr/bin/g++ $(PROGRAM_NAME).c++.o -o $(PROGRAM_NAME).gpp_run
+
 measure:
 	sudo modprobe msr
-	sudo ../../RAPL/main "./nbody.gpp-8.gpp_run 50000000" C++ n-body
+	sudo ../../RAPL/main "./$(PROGRAM_NAME).gpp_run 50000000" C++ n-body
 
 run:
-	./nbody.gpp-8.gpp_run 50000000
+	./$(PROGRAM_NAME).gpp_run 50000000
 
 mem:
-	/usr/bin/time -v ./nbody.gpp-8.gpp_run 50000000
+	/usr/bin/time -v ./$(PROGRAM_NAME).gpp_run 50000000
 
 valgrind:
-	valgrind --tool=massif --stacks=yes ./nbody.gpp-8.gpp_run 50000000
+	valgrind --tool=massif --stacks=yes ./$(PROGRAM_NAME).gpp_run 50000000
 
 

@@ -1,10 +1,11 @@
+PROGRAM_NAME=regexredux.gcc-5
 compile:
-	/usr/bin/gcc -pipe -Wall -O3 -fomit-frame-pointer -march=native -fopenmp regexredux.gcc-4.c -o regexredux.gcc-4.gcc_run -lpcre
+	/usr/bin/gcc -pipe -Wall -O3 -fomit-frame-pointer -march=native -fopenmp $(PROGRAM_NAME).c -o $(PROGRAM_NAME).gcc_run -lpcre2-8
 measure:
 	sudo modprobe msr
-	sudo ../../RAPL/main "./regexredux.gcc-4.gcc_run 0 < ../../regexredux-input5000000.txt" C regex-redux
+	sudo ../../RAPL/main "./$(PROGRAM_NAME).gcc_run 0 < ../../regexredux-input5000000.txt" C regex-redux
 
 run:
-	./regexredux.gcc-4.gcc_run 0 < ../../regexredux-input5000000.txt
+	./$(PROGRAM_NAME).gcc_run 0 < ../../regexredux-input5000000.txt
 mem:
-	/usr/bin/time -v ./regexredux.gcc-4.gcc_run 0 < ../../regexredux-input5000000.txt
+	/usr/bin/time -v ./$(PROGRAM_NAME).gcc_run 0 < ../../regexredux-input5000000.txt

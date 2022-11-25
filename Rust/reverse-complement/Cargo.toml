@@ -6,6 +6,8 @@ name="revcomp"
 path="revcomp.rs"
 [dependencies]
 rayon="*"
+memchr="*"
 [profile.bench]
 opt-level = 3
 lto = true
+codegen-units = 1

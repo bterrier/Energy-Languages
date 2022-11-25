@@ -1,11 +1,12 @@
+PROGRAM_NAME=mandelbrot.gcc-6
 compile:
-	/usr/bin/gcc -pipe -Wall -O3 -fomit-frame-pointer -march=native -mno-fma -fno-finite-math-only -mfpmath=sse -msse2 -fopenmp mandelbrot.gcc-6.c -o mandelbrot.gcc-6.gcc_run
+	/usr/bin/gcc -pipe -Wall -O3 -fomit-frame-pointer -march=native -mno-fma -fno-finite-math-only -mfpmath=sse -msse2 -fopenmp $(PROGRAM_NAME).c -o $(PROGRAM_NAME).gcc_run
 measure:
 	sudo modprobe msr
-	sudo ../../RAPL/main "./mandelbrot.gcc-6.gcc_run 16000" C mandelbrot
+	sudo ../../RAPL/main "./$(PROGRAM_NAME).gcc_run 16000" C mandelbrot
 
 run:
-	./mandelbrot.gcc-6.gcc_run 16000
+	./$(PROGRAM_NAME).gcc_run 16000
 
 mem:
-	/usr/bin/time -v ./mandelbrot.gcc-6.gcc_run 16000
+	/usr/bin/time -v ./$(PROGRAM_NAME).gcc_run 16000

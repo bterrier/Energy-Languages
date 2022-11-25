@@ -1,16 +1,17 @@
+PROGRAM_NAME=revcomp
 compile:
 	RUSTFLAGS='-C target-cpu=native' cargo build --profile bench
-	cp target/release/revcomp ./revcomp.rust-2.rust_run
+	cp target/release/revcomp ./$(PROGRAM_NAME).rust_run
 
 measure:
 	sudo modprobe msr
-	sudo ../../RAPL/main "./revcomp.rust-2.rust_run 0 < ../../revcomp-input25000000.txt" Rust reverse-complement
+	sudo ../../RAPL/main "./$(PROGRAM_NAME).rust_run 0 < ../../revcomp-input25000000.txt" Rust reverse-complement
 
 run:
-	./revcomp.rust-2.rust_run 0 < ../../revcomp-input25000000.txt
+	./$(PROGRAM_NAME).rust_run 0 < ../../revcomp-input25000000.txt
 
 mem:
-	/usr/bin/time -v ./revcomp.rust-2.rust_run 0 < ../../revcomp-input25000000.txt
+	/usr/bin/time -v ./$(PROGRAM_NAME).rust_run 0 < ../../revcomp-input25000000.txt
 
 valgrind:
-	valgrind --tool=massif --stacks=yes ./revcomp.rust-2.rust_run 0 < ../../revcomp-input25000000.txt
+	valgrind --tool=massif --stacks=yes ./$(PROGRAM_NAME).rust_run 0 < ../../revcomp-input25000000.txt

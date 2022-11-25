@@ -1,16 +1,17 @@
+PROGRAM_NAME=fasta.rust-7
 compile:
 	RUSTFLAGS='-C target-cpu=native' cargo build --profile bench
-	cp target/release/fasta ./fasta.rust-2.rust_run
+	cp target/release/fasta ./$(PROGRAM_NAME).rust_run
 
 measure:
 	sudo modprobe msr
-	sudo ../../RAPL/main "./fasta.rust-2.rust_run 25000000" Rust fasta
+	sudo ../../RAPL/main "./$(PROGRAM_NAME).rust_run 25000000" Rust fasta
 
 run:
-	./fasta.rust-2.rust_run 25000000
+	./$(PROGRAM_NAME).rust_run 25000000
 
 mem:
-	/usr/bin/time -v ./fasta.rust-2.rust_run 25000000
+	/usr/bin/time -v ./$(PROGRAM_NAME).rust_run 25000000
 
 valgrind:
-	valgrind --tool=massif --stacks=yes ./fasta.rust-2.rust_run 25000000
+	valgrind --tool=massif --stacks=yes ./$(PROGRAM_NAME).rust_run 25000000

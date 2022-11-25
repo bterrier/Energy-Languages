@@ -1,14 +1,17 @@
+PROGRAM_NAME=fannkuchredux.gpp-6
 compile:
-	/usr/bin/g++ -c -pipe -O3 -fomit-frame-pointer -march=native  -std=c++11 -fopenmp fannkuchredux.gpp-5.c++ -o fannkuchredux.gpp-5.c++.o &&  /usr/bin/g++ fannkuchredux.gpp-5.c++.o -o fannkuchredux.gpp-5.gpp_run -fopenmp 
+	/usr/bin/g++ -c -pipe -O3 -fomit-frame-pointer -march=native  -std=c++17 -fopenmp $(PROGRAM_NAME).c++ -o $(PROGRAM_NAME).c++.o
+	/usr/bin/g++ $(PROGRAM_NAME).c++.o -o $(PROGRAM_NAME).gpp_run -fopenmp
+	
 measure:
 	sudo modprobe msr
-	sudo ../../RAPL/main "./fannkuchredux.gpp-5.gpp_run 12" C++ fannkuch-redux
+	sudo ../../RAPL/main "./$(PROGRAM_NAME).gpp_run 12" C++ fannkuch-redux
 
 run:
-	./fannkuchredux.gpp-5.gpp_run 12
+	./$(PROGRAM_NAME).gpp_run 12
 
 mem:
-	 /usr/bin/time -v  ./fannkuchredux.gpp-5.gpp_run 12
+	 /usr/bin/time -v  ./$(PROGRAM_NAME).gpp_run 12
 valgrind:
-	valgrind --tool=massif --stacks=yes  ./fannkuchredux.gpp-5.gpp_run 12
+	valgrind --tool=massif --stacks=yes  ./$(PROGRAM_NAME).gpp_run 12
 
