@@ -1,15 +1,16 @@
+PROGRAM_NAME=regexredux.go-5
 compile:
-	/usr/bin/go build -o regexredux.go-2.go_run regexredux.go-2.go
+	/usr/bin/go build -o $(PROGRAM_NAME).go_run $(PROGRAM_NAME).go
 
 measure:
 	sudo modprobe msr
-	sudo ../../RAPL/main "./regexredux.go-2.go_run 0 < ../../regexredux-input5000000.txt" Go regex-redux
+	sudo ../../RAPL/main "./$(PROGRAM_NAME).go_run 0 < ../../regexredux-input5000000.txt" Go regex-redux
 
 run:
-	./regexredux.go-2.go_run 0 < ../../regexredux-input5000000.txt
+	./$(PROGRAM_NAME).go_run 0 < ../../regexredux-input5000000.txt
 
 mem:
-	/usr/bin/time -v ./regexredux.go-2.go_run 0 < ../../regexredux-input5000000.txt
+	/usr/bin/time -v ./$(PROGRAM_NAME).go_run 0 < ../../regexredux-input5000000.txt
 
 valgrind:
-	valgrind --tool=massif --stacks=yes ./regexredux.go-2.go_run 0 < ../../regexredux-input5000000.txt
+	valgrind --tool=massif --stacks=yes ./$(PROGRAM_NAME).go_run 0 < ../../regexredux-input5000000.txt

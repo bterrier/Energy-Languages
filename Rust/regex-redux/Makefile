@@ -1,4 +1,4 @@
-PROGRAM_NAME=./regexredux.rust-6
+PROGRAM_NAME=./regexredux.rust-7
 compile:
 	RUSTFLAGS='-C target-cpu=native' cargo build --profile bench
 	cp target/release/regexredux ./$(PROGRAM_NAME).rust_run
