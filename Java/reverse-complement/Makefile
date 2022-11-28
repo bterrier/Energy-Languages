@@ -1,5 +1,6 @@
+PROGRAM_NAME=revcomp.java-8
 compile:
-	cp revcomp.java-3.java revcomp.java
+	cp $(PROGRAM_NAME).java revcomp.java
 	javac -d .  revcomp.java
 measure:
 	sudo modprobe msr

@@ -1,5 +1,6 @@
+PROGRAM_NAME=fasta.java-6
 compile:
-	cp fasta.java-5.java fasta.java
+	cp $(PROGRAM_NAME).java fasta.java
 	javac -d .  fasta.java
 measure:
 	sudo modprobe msr

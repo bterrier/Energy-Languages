@@ -1,5 +1,6 @@
+PROGRAM_NAME=spectralnorm.java-3
 compile:
-	cp spectralnorm.java-2.java spectralnorm.java
+	cp $(PROGRAM_NAME).java spectralnorm.java
 	javac -d .  spectralnorm.java
 measure:
 	sudo modprobe msr
