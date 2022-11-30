@@ -5,7 +5,7 @@
 */
 
 
-/// <reference path="../node_modules/@types/node/index.d.ts" />
+/// <reference path="../node_modules/@types/node/ts3.2/index.d.ts" />
 
 class TreeNode {
    constructor(

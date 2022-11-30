@@ -6,6 +6,7 @@ folders=(
         C++
         Go
         Java
+        JavaScript
         Python
         Rust
     )
