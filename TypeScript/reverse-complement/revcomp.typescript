@@ -6,7 +6,7 @@
 */
 
 
-/// <reference path="../node_modules/@types/node/index.d.ts" />
+/// <reference path="../node_modules/@types/node/ts3.2/index.d.ts" />
 
 class LinkedArray {
     prev: LinkedArray;
@@ -71,7 +71,7 @@ function read() {
                 // there is a caret in this chunk -- process the first part of
                 // the chunk and then continue the `while (true)` loop to process
                 // the next part of the chunk
-                lines[lnIdx] = chunk.slice(0, caretIdx);
+                lines[lnIdx] = chunk.slice(0, caretIdx) as Object as number[];
                 // set chunk to the next section
                 chunk = chunk.slice(caretIdx);
                 la.pos = lnIdx + 1;
@@ -85,7 +85,7 @@ function read() {
                 const headerEnds = chunk.indexOf('\n');
                 if (headerEnds < 0) {
                     needHeader = true;
-                    headerPartial = chunk;
+                    headerPartial = <string>chunk;
                     break;
                 } else {
                     // log the header
@@ -98,10 +98,10 @@ function read() {
                     la.pos = LA_LEN;
                     la = la.next || (la.next = new LinkedArray(la));
                     lines = la.data;
-                    lines[0] = chunk;
+                    lines[0] = chunk as Object as number[];
                     lnIdx = la.pos = 1;
                 } else {
-                    lines[lnIdx] = chunk;
+                    lines[lnIdx] = chunk as Object as number[];
                     lnIdx++;
                 }
                 break;

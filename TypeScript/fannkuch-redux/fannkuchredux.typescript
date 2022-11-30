@@ -4,7 +4,7 @@
 */
 
 
-/// <reference path="../node_modules/@types/node/index.d.ts" />
+/// <reference path="../node_modules/@types/node/ts3.2/index.d.ts" />
 
 function fannkuch(n: number): number {
    const perm = new Array(n), count = new Array(n)

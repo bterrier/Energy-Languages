@@ -7,7 +7,7 @@
  */
 
 
-/// <reference path="../node_modules/@types/node/index.d.ts" />
+/// <reference path="../node_modules/@types/node/ts3.2/index.d.ts" />
 
 type Freq = { s: string; p: number; c: number; sc: number };
 
@@ -31,7 +31,8 @@ class Out {
 }
 
 var IM = 139968, IA = 3877, IC = 29573, last = 42;
-var LINE_LEN = 60, NEW_LINE = 10, ENCODING = 'binary';
+var LINE_LEN = 60, NEW_LINE = 10;
+let ENCODING : BufferEncoding = 'binary';
 var out = new Out();
 
 function random(): number {
