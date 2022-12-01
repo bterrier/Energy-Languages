@@ -1,14 +1,15 @@
+PROGRAM_NAME=fannkuchredux.node-5
 compile:
-	cp -L fannkuchredux.node-4.node fannkuchredux.node-4.js
+	cp -L $(PROGRAM_NAME).node $(PROGRAM_NAME).js
 measure:
 	sudo modprobe msr
-	sudo ../../RAPL/main "node fannkuchredux.node-4.js 12" JavaScript fannkuch-redux
+	sudo ../../RAPL/main "node $(PROGRAM_NAME).js 12" JavaScript fannkuch-redux
 
 run:
-	node fannkuchredux.node-4.js 12
+	node $(PROGRAM_NAME).js 12
 
 mem:
-	/usr/bin/time -v node fannkuchredux.node-4.js 12
+	/usr/bin/time -v node $(PROGRAM_NAME).js 12
 
 valgrind:
-	valgrind --tool=massif --stacks=yes node fannkuchredux.node-4.js 12
+	valgrind --tool=massif --stacks=yes node $(PROGRAM_NAME).js 12

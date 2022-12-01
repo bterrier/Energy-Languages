@@ -1,19 +1,20 @@
+PROGRAM_NAME=regexredux.typescript-4
 compile:
-	cp regexredux.typescript-3.typescript regexredux.typescript-3.ts
-	tsc --alwaysStrict -t ESNEXT --lib es7 regexredux.typescript-3.ts
+	cp $(PROGRAM_NAME).typescript $(PROGRAM_NAME).ts
+	tsc --alwaysStrict -t ESNEXT --lib es7 $(PROGRAM_NAME).ts
 
 measure:
 	sudo modprobe msr
-	sudo ../../RAPL/main "node --use_strict regexredux.typescript-3.js 0 < ../../regexredux-input5000000.txt" TypeScript regex-redux
+	sudo ../../RAPL/main "node --use_strict $(PROGRAM_NAME).js 0 < ../../regexredux-input5000000.txt" TypeScript regex-redux
 
 run:
-	node --use_strict regexredux.typescript-3.js 0 < ../../regexredux-input5000000.txt
+	node --use_strict $(PROGRAM_NAME).js 0 < ../../regexredux-input5000000.txt
 
 clean:
 	rm -rf *.js *.ts
 
 mem:
-	/usr/bin/time -v node --use_strict regexredux.typescript-3.js 0 < ../../regexredux-input5000000.txt
+	/usr/bin/time -v node --use_strict $(PROGRAM_NAME).js 0 < ../../regexredux-input5000000.txt
 
 valgrind:
-	valgrind --tool=massif --stacks=yes node --use_strict regexredux.typescript-3.js 0 < ../../regexredux-input5000000.txt
+	valgrind --tool=massif --stacks=yes node --use_strict $(PROGRAM_NAME).js 0 < ../../regexredux-input5000000.txt

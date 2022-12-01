@@ -1,14 +1,15 @@
+PROGRAM_NAME=binarytrees.node-6
 compile:
-	cp -L binarytrees.node binarytrees.js
+	cp -L $(PROGRAM_NAME).node $(PROGRAM_NAME).js
 measure:
 	sudo modprobe msr
-	sudo ../../RAPL/main "node binarytrees.js 21" JavaScript binary-trees
+	sudo ../../RAPL/main "node $(PROGRAM_NAME).js 21" JavaScript binary-trees
 
 run:
-	node binarytrees.js 21
+	node $(PROGRAM_NAME).js 21
 
 mem:
-	/usr/bin/time -v node binarytrees.js 21
+	/usr/bin/time -v node $(PROGRAM_NAME).js 21
 
 valgrind:
-	valgrind --tool=massif --stacks=yes node binarytrees.js 21
+	valgrind --tool=massif --stacks=yes node $(PROGRAM_NAME).js 21

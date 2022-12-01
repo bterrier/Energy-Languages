@@ -1,16 +1,18 @@
+PROGRAM_NAME=fasta.node-5
+
 compile:
-	cp -L fasta.node-4.node fasta.node-4.js
+	cp -L $(PROGRAM_NAME).node $(PROGRAM_NAME).js
 measure:
 	sudo modprobe msr
-	sudo ../../RAPL/main "node fasta.node-4.js 25000000" JavaScript fasta
+	sudo ../../RAPL/main "node $(PROGRAM_NAME).js 25000000" JavaScript fasta
 
 run:
-	node fasta.node-4.js 25000000
+	node $(PROGRAM_NAME).js 25000000
 
 mem:
-	/usr/bin/time -v node fasta.node-4.js 25000000
+	/usr/bin/time -v node $(PROGRAM_NAME).js 25000000
 
 
 valgrind:
-	valgrind --tool=massif --stacks=yes node fasta.node-4.js 25000000
+	valgrind --tool=massif --stacks=yes node $(PROGRAM_NAME).js 25000000
 
